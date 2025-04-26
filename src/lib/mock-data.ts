@@ -1,5 +1,5 @@
 
-import { User, Challenge, Company, Activity, Recognition } from './types';
+import { User, Challenge, Company, Activity, Recognition, FeedActivity, FeedActivityType } from './types';
 
 // Mock users data
 export const users: User[] = [
@@ -348,51 +348,51 @@ export const recognitions: Recognition[] = [
 ];
 
 // Mock feed activity
-export const feedActivities = [
+export const feedActivities: FeedActivity[] = [
   {
     id: 1,
-    type: 'join-challenge',
+    type: 'join-challenge' as FeedActivityType,
     user: 1, // Ana Martinez
     challenge: 3, // Comunidad energética vecinal
     date: '2025-04-10T14:30:00Z'
   },
   {
     id: 2,
-    type: 'complete-profile',
+    type: 'complete-profile' as FeedActivityType,
     user: 7, // Sofía García
     date: '2025-04-09T10:15:00Z'
   },
   {
     id: 3,
-    type: 'receive-recognition',
+    type: 'receive-recognition' as FeedActivityType,
     user: 3, // Laura Fernández
     recognition: 1, // Embajador del mes
     date: '2025-04-01T09:00:00Z'
   },
   {
     id: 4,
-    type: 'join-challenge',
+    type: 'join-challenge' as FeedActivityType,
     user: 4, // Miguel Torres
     challenge: 5, // Huerto vertical inteligente
     date: '2025-04-08T16:45:00Z'
   },
   {
     id: 5,
-    type: 'interest-activity',
+    type: 'interest-activity' as FeedActivityType,
     user: 2, // Carlos López
     activity: 3, // Taller de compostaje comunitario
     date: '2025-04-07T11:20:00Z'
   },
   {
     id: 6,
-    type: 'join-challenge',
+    type: 'join-challenge' as FeedActivityType,
     user: 5, // Elena Ruiz
     challenge: 6, // Microrredes para comunidades aisladas
     date: '2025-04-05T13:10:00Z'
   },
   {
     id: 7,
-    type: 'interest-activity',
+    type: 'interest-activity' as FeedActivityType,
     user: 6, // Pablo Sánchez
     activity: 2, // Plantación de árboles autóctonos
     date: '2025-04-03T15:30:00Z'
