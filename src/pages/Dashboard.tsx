@@ -1,6 +1,4 @@
 
-import { useEffect, useState } from "react";
-import { Navigate, Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Award, Calendar, Star, Users } from "lucide-react";
@@ -9,11 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import DashboardFeedEvent from "@/components/DashboardFeedEvent";
 import { users, challenges, activities, recognitions, feedActivities } from "@/lib/mock-data";
 import type { User, Challenge, Activity, Recognition, FeedActivity } from "@/lib/types";
-
-// Mock data - remove when implementing real authentication
-const MOCK_USER_ID = "1";
+import { useEffect, useState } from "react";
 
 const Dashboard = () => {
+  // Using Ana Martinez's data (id: "1")
   const [user, setUser] = useState<User | null>(null);
   const [userChallenges, setUserChallenges] = useState<Challenge[]>([]);
   const [latestRecognition, setLatestRecognition] = useState<Recognition | null>(null);
@@ -22,8 +19,8 @@ const Dashboard = () => {
   const [recentActivities, setRecentActivities] = useState<FeedActivity[]>([]);
 
   useEffect(() => {
-    // Simulate fetching user data
-    const currentUser = users.find(u => u.id === MOCK_USER_ID);
+    // Simulate fetching user data (Ana Martinez)
+    const currentUser = users.find(u => u.id === "1");
     setUser(currentUser || null);
 
     if (currentUser) {
@@ -66,18 +63,6 @@ const Dashboard = () => {
     }
   }, []);
 
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
-
-  const getInitials = (name: string) => {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase();
-  };
-
   const motivationalPhrases = [
     "Cada pequeña acción cuenta para un futuro mejor",
     "Juntos construimos un mundo más sostenible",
@@ -87,6 +72,8 @@ const Dashboard = () => {
 
   const randomPhrase = motivationalPhrases[Math.floor(Math.random() * motivationalPhrases.length)];
 
+  if (!user) return null;
+
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Welcome Section */}
@@ -94,10 +81,10 @@ const Dashboard = () => {
         <div className="flex items-center gap-4 mb-4">
           <Avatar className="w-16 h-16">
             <AvatarImage src={user.avatar} alt={user.name} />
-            <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
+            <AvatarFallback>{user.name.split(" ").map(n => n[0]).join("")}</AvatarFallback>
           </Avatar>
           <div>
-            <h1 className="text-2xl font-bold mb-1">¡Bienvenido/a, {user.name}!</h1>
+            <h1 className="text-2xl font-bold mb-1">¡Bienvenida, {user.name}!</h1>
             <p className="text-gray-600 italic">{randomPhrase}</p>
           </div>
         </div>
@@ -137,17 +124,15 @@ const Dashboard = () => {
             </div>
             <div className="space-y-4">
               {userChallenges.map(challenge => (
-                <Link key={challenge.id} to={`/challenges/${challenge.id}`}>
-                  <div className="group hover:bg-gray-50 rounded-lg p-3 transition-colors">
-                    <h4 className="font-medium group-hover:text-sinapsis-green">{challenge.title}</h4>
-                    <div className="text-sm text-gray-600 space-y-1">
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
-                        <span>Inicio: {new Date(challenge.startDate).toLocaleDateString()}</span>
-                      </div>
+                <div key={challenge.id} className="group hover:bg-gray-50 rounded-lg p-3 transition-colors">
+                  <h4 className="font-medium group-hover:text-sinapsis-green">{challenge.title}</h4>
+                  <div className="text-sm text-gray-600 space-y-1">
+                    <div className="flex items-center gap-1">
+                      <Calendar className="w-4 h-4" />
+                      <span>Inicio: {new Date(challenge.startDate).toLocaleDateString()}</span>
                     </div>
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
           </CardContent>
@@ -184,15 +169,13 @@ const Dashboard = () => {
                 <div key={user.id} className="flex items-center gap-3">
                   <Avatar>
                     <AvatarImage src={user.avatar} alt={user.name} />
-                    <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
+                    <AvatarFallback>{user.name.split(" ").map(n => n[0]).join("")}</AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
                     <h4 className="font-medium">{user.name}</h4>
                     <p className="text-sm text-gray-600">{user.city}</p>
                   </div>
-                  <Button variant="ghost" size="sm" asChild>
-                    <Link to={`/profile/${user.id}`}>Ver perfil</Link>
-                  </Button>
+                  <Button variant="ghost" size="sm">Ver perfil</Button>
                 </div>
               ))}
             </div>
