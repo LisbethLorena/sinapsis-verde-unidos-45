@@ -1,7 +1,7 @@
 
 // User type definition
 export interface User {
-  id: number;
+  id: string; // UUID
   name: string;
   email: string;
   avatar: string;
@@ -11,33 +11,33 @@ export interface User {
   skills: string[];
   attitudes: string[];
   points: number;
-  savedProfiles: number[];
-  participatingChallenges: number[];
+  savedProfiles: string[]; // UUIDs
+  participatingChallenges: string[]; // UUIDs
 }
 
 // Company type definition
 export interface Company {
-  id: number;
+  id: string; // UUID
   name: string;
   logo: string;
   description: string;
   sector: string;
   city: string;
   website: string;
-  publishedChallenges: number[];
+  publishedChallenges: string[]; // UUIDs
 }
 
 // Challenge type definition
 export interface Challenge {
-  id: number;
+  id: string; // UUID
   title: string;
   description: string;
-  company: number; // Company ID
+  company: string; // Company UUID
   contributionType: string;
   reward: string;
   startDate: string;
   endDate: string;
-  participants: number[]; // User IDs
+  participants: string[]; // User UUIDs
   image: string;
   location: string;
   category: string;
@@ -47,7 +47,7 @@ export interface Challenge {
 
 // Activity type definition
 export interface Activity {
-  id: number;
+  id: string; // UUID
   title: string;
   description: string;
   date: string;
@@ -55,17 +55,17 @@ export interface Activity {
   organizer: string;
   image: string;
   duration: string;
-  participants: number; // Maximum number of participants
+  participants: number;
   category: string;
-  interestedUsers: number[]; // User IDs
+  interestedUsers: string[]; // User UUIDs
 }
 
 // Recognition type definition
 export interface Recognition {
-  id: number;
+  id: string; // UUID
   title: string;
   description: string;
-  user: number; // User ID
+  user: string; // User UUID
   date: string;
   image: string;
   category: string;
@@ -82,9 +82,9 @@ export type FeedActivityType =
 export interface FeedActivity {
   id: number;
   type: FeedActivityType;
-  user: number; // User ID
-  challenge?: number; // Optional Challenge ID
-  recognition?: number; // Optional Recognition ID
-  activity?: number; // Optional Activity ID
+  user: string; // User UUID
+  challenge?: string; // Optional Challenge UUID
+  recognition?: string; // Optional Recognition UUID
+  activity?: string; // Optional Activity UUID
   date: string;
 }

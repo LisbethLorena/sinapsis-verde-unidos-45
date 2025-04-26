@@ -9,7 +9,341 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      activities: {
+        Row: {
+          activity_type: string | null
+          category: string | null
+          company_id: string | null
+          date: string | null
+          description: string | null
+          id: string
+          image: string | null
+          location: string | null
+          max_participants: number | null
+          title: string
+        }
+        Insert: {
+          activity_type?: string | null
+          category?: string | null
+          company_id?: string | null
+          date?: string | null
+          description?: string | null
+          id?: string
+          image?: string | null
+          location?: string | null
+          max_participants?: number | null
+          title: string
+        }
+        Update: {
+          activity_type?: string | null
+          category?: string | null
+          company_id?: string | null
+          date?: string | null
+          description?: string | null
+          id?: string
+          image?: string | null
+          location?: string | null
+          max_participants?: number | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activities_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      applications: {
+        Row: {
+          application_date: string | null
+          challenge_id: string | null
+          id: string
+          status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          application_date?: string | null
+          challenge_id?: string | null
+          id?: string
+          status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          application_date?: string | null
+          challenge_id?: string | null
+          id?: string
+          status?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "applications_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "applications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      challenges: {
+        Row: {
+          category: string | null
+          company_id: string | null
+          contribution_type: string | null
+          description: string | null
+          difficulty: string | null
+          end_date: string | null
+          id: string
+          image: string | null
+          reward: string | null
+          start_date: string | null
+          status: string | null
+          title: string
+        }
+        Insert: {
+          category?: string | null
+          company_id?: string | null
+          contribution_type?: string | null
+          description?: string | null
+          difficulty?: string | null
+          end_date?: string | null
+          id?: string
+          image?: string | null
+          reward?: string | null
+          start_date?: string | null
+          status?: string | null
+          title: string
+        }
+        Update: {
+          category?: string | null
+          company_id?: string | null
+          contribution_type?: string | null
+          description?: string | null
+          difficulty?: string | null
+          end_date?: string | null
+          id?: string
+          image?: string | null
+          reward?: string | null
+          start_date?: string | null
+          status?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenges_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      companies: {
+        Row: {
+          city: string | null
+          description: string | null
+          id: string
+          logo: string | null
+          name: string
+        }
+        Insert: {
+          city?: string | null
+          description?: string | null
+          id?: string
+          logo?: string | null
+          name: string
+        }
+        Update: {
+          city?: string | null
+          description?: string | null
+          id?: string
+          logo?: string | null
+          name?: string
+        }
+        Relationships: []
+      }
+      favorites: {
+        Row: {
+          created_at: string | null
+          favorite_profile_id: string | null
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          favorite_profile_id?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          favorite_profile_id?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorites_favorite_profile_id_fkey"
+            columns: ["favorite_profile_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "favorites_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      feed_events: {
+        Row: {
+          activity_id: string | null
+          challenge_id: string | null
+          created_at: string | null
+          event_type: string
+          id: string
+          recognition_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          activity_id?: string | null
+          challenge_id?: string | null
+          created_at?: string | null
+          event_type: string
+          id?: string
+          recognition_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          activity_id?: string | null
+          challenge_id?: string | null
+          created_at?: string | null
+          event_type?: string
+          id?: string
+          recognition_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feed_events_activity_id_fkey"
+            columns: ["activity_id"]
+            isOneToOne: false
+            referencedRelation: "activities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "feed_events_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "feed_events_recognition_id_fkey"
+            columns: ["recognition_id"]
+            isOneToOne: false
+            referencedRelation: "recognitions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "feed_events_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      recognitions: {
+        Row: {
+          category: string | null
+          date: string | null
+          description: string | null
+          id: string
+          image: string | null
+          reason: string | null
+          title: string | null
+          user_id: string | null
+        }
+        Insert: {
+          category?: string | null
+          date?: string | null
+          description?: string | null
+          id?: string
+          image?: string | null
+          reason?: string | null
+          title?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          category?: string | null
+          date?: string | null
+          description?: string | null
+          id?: string
+          image?: string | null
+          reason?: string | null
+          title?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recognitions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      users: {
+        Row: {
+          attitudes: string[] | null
+          avatar: string | null
+          bio: string | null
+          city: string | null
+          id: string
+          interests: string[] | null
+          name: string
+          points: number | null
+          skills: string[] | null
+        }
+        Insert: {
+          attitudes?: string[] | null
+          avatar?: string | null
+          bio?: string | null
+          city?: string | null
+          id?: string
+          interests?: string[] | null
+          name: string
+          points?: number | null
+          skills?: string[] | null
+        }
+        Update: {
+          attitudes?: string[] | null
+          avatar?: string | null
+          bio?: string | null
+          city?: string | null
+          id?: string
+          interests?: string[] | null
+          name?: string
+          points?: number | null
+          skills?: string[] | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
