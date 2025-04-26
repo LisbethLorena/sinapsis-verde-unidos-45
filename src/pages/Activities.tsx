@@ -21,7 +21,7 @@ const Activities = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
-  const [interestedActivities, setInterestedActivities] = useState<number[]>([]);
+  const [interestedActivities, setInterestedActivities] = useState<string[]>([]);
   
   // Extract all unique categories and locations
   const allCategories = Array.from(
@@ -73,7 +73,7 @@ const Activities = () => {
   };
   
   // Handle interest in activity
-  const handleInterest = (activityId: number) => {
+  const handleInterest = (activityId: string) => {
     if (interestedActivities.includes(activityId)) {
       setInterestedActivities(interestedActivities.filter((id) => id !== activityId));
     } else {

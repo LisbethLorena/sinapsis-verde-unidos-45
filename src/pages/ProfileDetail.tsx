@@ -1,4 +1,3 @@
-
 import { useParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -13,8 +12,7 @@ import ChallengeCard from "@/components/ChallengeCard";
 
 const ProfileDetail = () => {
   const { id } = useParams();
-  const userId = parseInt(id || "1");
-  const user = users.find((u) => u.id === userId);
+  const user = users.find((u) => u.id === id);
   const [saved, setSaved] = useState(false);
   
   // Get user's participating challenges

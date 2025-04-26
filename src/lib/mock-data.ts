@@ -1,3 +1,4 @@
+
 import { User, Challenge, Company, Activity, Recognition, FeedActivity, FeedActivityType } from './types';
 
 // Mock users data
@@ -152,7 +153,7 @@ export const challenges: Challenge[] = [
     id: "1",
     title: 'Reforestación urbana participativa',
     description: 'Buscamos voluntarios para diseñar e implementar un plan de reforestación en áreas urbanas degradadas, creando espacios verdes comunitarios.',
-    company: 1, // EcoSolutions
+    company: "1", // EcoSolutions
     contributionType: 'Tiempo y habilidades',
     reward: 'Certificado de participación y reconocimiento público',
     startDate: '2025-05-01',
@@ -249,7 +250,7 @@ export const challenges: Challenge[] = [
 // Mock volunteer activities
 export const activities: Activity[] = [
   {
-    id: 1,
+    id: "1",
     title: 'Limpieza de playa',
     description: 'Jornada de limpieza y clasificación de residuos en la playa de la Malvarrosa.',
     date: '2025-05-10',
@@ -318,10 +319,10 @@ export const activities: Activity[] = [
 // Mock recognitions data
 export const recognitions: Recognition[] = [
   {
-    id: 1,
+    id: "1",
     title: 'Embajador del mes',
     description: 'Por su destacada labor en la difusión y promoción de los retos ambientales en su comunidad.',
-    user: 3, // Laura Fernández
+    user: "3", // Laura Fernández
     date: '2025-04-01',
     image: 'https://via.placeholder.com/300?text=Reconocimiento',
     category: 'Divulgación'
@@ -349,51 +350,51 @@ export const recognitions: Recognition[] = [
 // Mock feed activity
 export const feedActivities: FeedActivity[] = [
   {
-    id: 1,
+    id: "1",
     type: 'join-challenge' as FeedActivityType,
     user: "1", // Ana Martinez
     challenge: "3", // Comunidad energética vecinal
     date: '2025-04-10T14:30:00Z'
   },
   {
-    id: 2,
+    id: "2",
     type: 'complete-profile' as FeedActivityType,
     user: "7", // Sofía García
     date: '2025-04-09T10:15:00Z'
   },
   {
-    id: 3,
+    id: "3",
     type: 'receive-recognition' as FeedActivityType,
     user: "3", // Laura Fernández
-    recognition: 1, // Embajador del mes
+    recognition: "1", // Embajador del mes
     date: '2025-04-01T09:00:00Z'
   },
   {
-    id: 4,
+    id: "4",
     type: 'join-challenge' as FeedActivityType,
     user: "4", // Miguel Torres
     challenge: "5", // Huerto vertical inteligente
     date: '2025-04-08T16:45:00Z'
   },
   {
-    id: 5,
+    id: "5",
     type: 'interest-activity' as FeedActivityType,
     user: "2", // Carlos López
-    activity: 3, // Taller de compostaje comunitario
+    activity: "3", // Taller de compostaje comunitario
     date: '2025-04-07T11:20:00Z'
   },
   {
-    id: 6,
+    id: "6",
     type: 'join-challenge' as FeedActivityType,
     user: "5", // Elena Ruiz
     challenge: "6", // Microrredes para comunidades aisladas
     date: '2025-04-05T13:10:00Z'
   },
   {
-    id: 7,
+    id: "7",
     type: 'interest-activity' as FeedActivityType,
     user: "6", // Pablo Sánchez
-    activity: 2, // Plantación de árboles autóctonos
+    activity: "2", // Plantación de árboles autóctonos
     date: '2025-04-03T15:30:00Z'
   }
 ];

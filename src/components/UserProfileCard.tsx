@@ -11,7 +11,7 @@ import { User } from "@/lib/types";
 interface UserProfileCardProps {
   user: User;
   isSaved?: boolean;
-  onSave?: (userId: number) => void;
+  onSave?: (userId: string) => void;
 }
 
 const UserProfileCard = ({ user, isSaved = false, onSave }: UserProfileCardProps) => {

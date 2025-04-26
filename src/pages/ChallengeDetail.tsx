@@ -1,4 +1,3 @@
-
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
@@ -13,8 +12,7 @@ import { Calendar, Clock, MapPin, Award } from "lucide-react";
 
 const ChallengeDetail = () => {
   const { id } = useParams();
-  const challengeId = parseInt(id || "1");
-  const challenge = challenges.find((c) => c.id === challengeId);
+  const challenge = challenges.find((c) => c.id === id);
   const company = challenge ? companies.find((c) => c.id === challenge.company) : null;
   const participants = challenge
     ? users.filter((user) => challenge.participants.includes(user.id))

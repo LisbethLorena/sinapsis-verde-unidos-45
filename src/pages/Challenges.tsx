@@ -21,7 +21,7 @@ const Challenges = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedContributionTypes, setSelectedContributionTypes] = useState<string[]>([]);
-  const [selectedCompanies, setSelectedCompanies] = useState<number[]>([]);
+  const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
   const [selectedDifficulties, setSelectedDifficulties] = useState<string[]>([]);
   
   // Extract all unique categories, contribution types, and difficulties
@@ -88,7 +88,7 @@ const Challenges = () => {
   };
   
   // Toggle company filter
-  const toggleCompany = (companyId: number) => {
+  const toggleCompany = (companyId: string) => {
     if (selectedCompanies.includes(companyId)) {
       setSelectedCompanies(selectedCompanies.filter((id) => id !== companyId));
     } else {

@@ -9,7 +9,7 @@ import { es } from "date-fns/locale";
 
 interface ActivityCardProps {
   activity: Activity;
-  onInterest?: (activityId: number) => void;
+  onInterest?: (activityId: string) => void;
   isInterested?: boolean;
 }
 
