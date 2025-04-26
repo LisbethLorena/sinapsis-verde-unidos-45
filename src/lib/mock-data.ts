@@ -1,4 +1,3 @@
-
 import { User, Challenge, Company, Activity, Recognition, FeedActivity, FeedActivityType } from './types';
 
 // Mock users data
@@ -347,7 +346,7 @@ export const recognitions: Recognition[] = [
   }
 ];
 
-// Mock feed activity
+// Mock feed activities
 export const feedActivities: FeedActivity[] = [
   {
     id: "1",
