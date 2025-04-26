@@ -169,7 +169,7 @@ export const challenges: Challenge[] = [
     id: "2",
     title: 'Diseño de envases compostables',
     description: 'Reto para diseñar nuevos envases 100% compostables para productos frescos, reduciendo el uso de plásticos de un solo uso.',
-    company: 2, // GreenLife
+    company: "2", // GreenLife
     contributionType: 'Ideas y diseño',
     reward: 'Premio económico y posibilidad de desarrollar el producto',
     startDate: '2025-04-15',
@@ -185,7 +185,7 @@ export const challenges: Challenge[] = [
     id: "3",
     title: 'Comunidad energética vecinal',
     description: 'Buscamos participantes para crear un modelo de comunidad energética donde los vecinos comparten y gestionan recursos renovables.',
-    company: 3, // RenovaTech
+    company: "3", // RenovaTech
     contributionType: 'Tiempo, ideas y divulgación',
     reward: 'Participación en los beneficios energéticos',
     startDate: '2025-04-01',
@@ -201,7 +201,7 @@ export const challenges: Challenge[] = [
     id: "4",
     title: 'Monitorización ciudadana de ríos',
     description: 'Iniciativa para capacitar voluntarios en la monitorización de la calidad del agua en ríos urbanos y crear una red de vigilancia ciudadana.',
-    company: 4, // AquaPura
+    company: "4", // AquaPura
     contributionType: 'Tiempo y habilidades',
     reward: 'Formación especializada y equipamiento',
     startDate: '2025-05-15',
@@ -217,7 +217,7 @@ export const challenges: Challenge[] = [
     id: "5",
     title: 'Huerto vertical inteligente',
     description: 'Reto para desarrollar un sistema de huerto vertical eficiente en agua y energía para espacios urbanos reducidos.',
-    company: 1, // EcoSolutions
+    company: "1", // EcoSolutions
     contributionType: 'Ideas y prototipado',
     reward: 'Desarrollo del prototipo y visibilidad',
     startDate: '2025-04-10',
@@ -233,7 +233,7 @@ export const challenges: Challenge[] = [
     id: "6",
     title: 'Microrredes para comunidades aisladas',
     description: 'Buscamos participantes para diseñar e implementar microrredes eléctricas en comunidades rurales sin acceso a la red general.',
-    company: 3, // RenovaTech
+    company: "3", // RenovaTech
     contributionType: 'Habilidades técnicas y tiempo',
     reward: 'Viaje a la zona de implementación',
     startDate: '2025-06-01',
@@ -263,7 +263,7 @@ export const activities: Activity[] = [
     interestedUsers: ["3", "7"]
   },
   {
-    id: 2,
+    id: "2",
     title: 'Plantación de árboles autóctonos',
     description: 'Reforestación con especies autóctonas en zona afectada por incendio forestal.',
     date: '2025-04-22',
@@ -276,7 +276,7 @@ export const activities: Activity[] = [
     interestedUsers: ["1", "2", "6"]
   },
   {
-    id: 3,
+    id: "3",
     title: 'Taller de compostaje comunitario',
     description: 'Aprende a crear y mantener un sistema de compostaje para tu comunidad de vecinos.',
     date: '2025-05-05',
@@ -289,7 +289,7 @@ export const activities: Activity[] = [
     interestedUsers: ["2", "4"]
   },
   {
-    id: 4,
+    id: "4",
     title: 'Censo de aves urbanas',
     description: 'Actividad para identificar y censar aves en el entorno urbano y contribuir a la ciencia ciudadana.',
     date: '2025-05-18',
@@ -302,7 +302,7 @@ export const activities: Activity[] = [
     interestedUsers: ["3", "5"]
   },
   {
-    id: 5,
+    id: "5",
     title: 'Instalación de hoteles de insectos',
     description: 'Taller y colocación de refugios para insectos polinizadores en parques urbanos.',
     date: '2025-05-22',
@@ -328,19 +328,19 @@ export const recognitions: Recognition[] = [
     category: 'Divulgación'
   },
   {
-    id: 2,
+    id: "2",
     title: 'Impacto positivo',
     description: 'Por su contribución significativa en el desarrollo de soluciones para la gestión sostenible del agua.',
-    user: 5, // Elena Ruiz
+    user: "5", // Elena Ruiz
     date: '2025-04-01',
     image: 'https://via.placeholder.com/300?text=Reconocimiento',
     category: 'Innovación'
   },
   {
-    id: 3,
+    id: "3",
     title: 'Conexión comunitaria',
     description: 'Por crear puentes entre diferentes actores sociales para el desarrollo de proyectos ambientales colaborativos.',
-    user: 1, // Ana Martinez
+    user: "1", // Ana Martinez
     date: '2025-04-01',
     image: 'https://via.placeholder.com/300?text=Reconocimiento',
     category: 'Comunidad'

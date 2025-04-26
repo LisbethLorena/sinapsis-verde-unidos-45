@@ -72,7 +72,7 @@ const Explore = () => {
   };
   
   // Save user as favorite
-  const handleSaveUser = (userId: number) => {
+  const handleSaveUser = (userId: string) => {
     console.log(`User ${userId} saved as favorite`);
     // In a real app, this would save to user data
   };
