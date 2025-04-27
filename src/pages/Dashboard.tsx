@@ -1,13 +1,13 @@
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Award, Calendar, Star, Users } from "lucide-react";
+import { Award, Calendar, Star, Users, LogOut } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import DashboardFeedEvent from "@/components/DashboardFeedEvent";
 import { users, challenges, activities, recognitions, feedActivities } from "@/lib/mock-data";
 import type { User, Challenge, Activity, Recognition, FeedActivity } from "@/lib/types";
 import { useEffect, useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Dashboard = () => {
   // Using Ana Martinez's data (id: "1")
@@ -17,6 +17,7 @@ const Dashboard = () => {
   const [suggestedActivities, setSuggestedActivities] = useState<Activity[]>([]);
   const [recommendedUsers, setRecommendedUsers] = useState<User[]>([]);
   const [recentActivities, setRecentActivities] = useState<FeedActivity[]>([]);
+  const { signOut } = useAuth();
 
   useEffect(() => {
     // Simulate fetching user data (Ana Martinez)
@@ -72,21 +73,31 @@ const Dashboard = () => {
 
   const randomPhrase = motivationalPhrases[Math.floor(Math.random() * motivationalPhrases.length)];
 
+  const handleSignOut = async () => {
+    await signOut();
+  };
+
   if (!user) return null;
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Welcome Section */}
+      {/* Welcome Section with Logout Button */}
       <div className="mb-8">
-        <div className="flex items-center gap-4 mb-4">
-          <Avatar className="w-16 h-16">
-            <AvatarImage src={user.avatar} alt={user.name} />
-            <AvatarFallback>{user.name.split(" ").map(n => n[0]).join("")}</AvatarFallback>
-          </Avatar>
-          <div>
-            <h1 className="text-2xl font-bold mb-1">¡Bienvenida, {user.name}!</h1>
-            <p className="text-gray-600 italic">{randomPhrase}</p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4 mb-4">
+            <Avatar className="w-16 h-16">
+              <AvatarImage src={user.avatar} alt={user.name} />
+              <AvatarFallback>{user.name.split(" ").map(n => n[0]).join("")}</AvatarFallback>
+            </Avatar>
+            <div>
+              <h1 className="text-2xl font-bold mb-1">¡Bienvenida, {user.name}!</h1>
+              <p className="text-gray-600 italic">{randomPhrase}</p>
+            </div>
           </div>
+          <Button variant="outline" onClick={handleSignOut} className="flex items-center">
+            <LogOut className="mr-2 h-4 w-4" />
+            Cerrar sesión
+          </Button>
         </div>
       </div>
 

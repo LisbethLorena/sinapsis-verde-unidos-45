@@ -1,29 +1,35 @@
 
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Loader2 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { signIn, signInWithGoogle, loading, user } = useAuth();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    // If already logged in, redirect to dashboard
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    
-    // Simulate login process
-    setTimeout(() => {
-      console.log("Login attempt with:", { email, password });
-      setIsSubmitting(false);
-      // In a real app, this would handle authentication
-      window.location.href = "/";
-    }, 1000);
+    await signIn(email, password);
+  };
+
+  const handleGoogleSignIn = async () => {
+    await signInWithGoogle();
   };
 
   return (
@@ -52,6 +58,7 @@ const Login = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
+                      disabled={loading}
                     />
                   </div>
                   
@@ -71,11 +78,19 @@ const Login = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
+                      disabled={loading}
                     />
                   </div>
                   
-                  <Button type="submit" className="w-full" disabled={isSubmitting}>
-                    {isSubmitting ? "Iniciando sesión..." : "Iniciar sesión"}
+                  <Button type="submit" className="w-full" disabled={loading}>
+                    {loading ? (
+                      <span className="flex items-center">
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Iniciando sesión...
+                      </span>
+                    ) : (
+                      "Iniciar sesión"
+                    )}
                   </Button>
                 </div>
               </form>
@@ -93,17 +108,18 @@ const Login = () => {
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4 mt-6">
-                  <Button variant="outline" type="button">
+                  <Button variant="outline" type="button" onClick={handleGoogleSignIn} disabled={loading} className="col-span-2">
                     <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M20.283 10.356h-8.327v3.451h4.792c-.446 2.193-2.313 3.453-4.792 3.453a5.27 5.27 0 0 1-5.279-5.28 5.27 5.27 0 0 1 5.279-5.279c1.259 0 2.397.447 3.29 1.178l2.6-2.599c-1.584-1.381-3.615-2.233-5.89-2.233a8.908 8.908 0 0 0-8.934 8.934 8.907 8.907 0 0 0 8.934 8.934c4.467 0 8.529-3.249 8.529-8.934 0-.528-.081-1.097-.202-1.625z"></path>
                     </svg>
-                    Google
-                  </Button>
-                  <Button variant="outline" type="button">
-                    <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M14.023 24L14 17h-4v-3h4v-2c0-3.3 2.9-4 5.5-4 1.6 0 3 .1 3 .1v3h-2c-1.6 0-2 .8-2 2v2h4l-.5 3H18v7h-3.977z"></path>
-                    </svg>
-                    Facebook
+                    {loading ? (
+                      <span className="flex items-center">
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Procesando...
+                      </span>
+                    ) : (
+                      "Continuar con Google"
+                    )}
                   </Button>
                 </div>
               </div>
