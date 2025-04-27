@@ -1,11 +1,10 @@
-
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/components/ui/use-toast';
+import { useProfile } from '@/hooks/useProfile';
 
-// Define the context type
 type AuthContextType = {
   session: Session | null;
   user: User | null;
@@ -16,18 +15,16 @@ type AuthContextType = {
   signOut: () => Promise<void>;
 };
 
-// Create the context with a default value
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Create a provider component
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { ensureUserProfile } = useProfile();
 
   useEffect(() => {
-    // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setSession(session);
@@ -36,7 +33,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     );
 
-    // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
@@ -46,7 +42,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Register a new user
   const signUp = async (email: string, password: string) => {
     setLoading(true);
     try {
@@ -57,13 +52,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (error) throw error;
       
-      // Show success toast
       toast({
         title: "Registro exitoso",
         description: "Por favor verifica tu correo para activar tu cuenta.",
       });
       
-      // Redirect to login page
       navigate('/login');
     } catch (error: any) {
       let message = "Error en el registro";
@@ -84,19 +77,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Sign in with email and password
+  const handleSuccessfulAuth = async (session: Session) => {
+    if (!session.user) return;
+    
+    try {
+      const profileCreated = await ensureUserProfile(session.user);
+      if (!profileCreated) {
+        throw new Error('Failed to create user profile');
+      }
+      
+      navigate('/dashboard');
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error setting up profile",
+        description: "There was an error setting up your profile. Please try again.",
+      });
+      
+      await signOut();
+    }
+  };
+
   const signIn = async (email: string, password: string) => {
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { error, data: { session } } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) throw error;
       
-      // Redirect to dashboard on success
-      navigate('/dashboard');
+      if (session) {
+        await handleSuccessfulAuth(session);
+      }
     } catch (error: any) {
       let message = "Error al iniciar sesión";
       
@@ -116,11 +130,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Sign in with Google
   const signInWithGoogle = async () => {
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
+      const { error, data: { session } } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/dashboard`
@@ -128,7 +141,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
 
       if (error) throw error;
-      // The redirect happens automatically
+      
+      if (session) {
+        await handleSuccessfulAuth(session);
+      }
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -141,7 +157,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Sign out
   const signOut = async () => {
     setLoading(true);
     try {
@@ -175,7 +190,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-// Create a custom hook to use the auth context
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
