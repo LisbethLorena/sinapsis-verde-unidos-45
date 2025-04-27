@@ -27,9 +27,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
+        
+        if (session?.user) {
+          const profileCreated = await ensureUserProfile(session.user);
+          if (!profileCreated && event !== 'SIGNED_OUT') {
+            toast({
+              variant: "destructive",
+              title: "Error al configurar el perfil",
+              description: "Hubo un error configurando tu perfil. Por favor intenta de nuevo.",
+            });
+            await signOut();
+          }
+        }
+        
         setLoading(false);
       }
     );
@@ -91,8 +104,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error: any) {
       toast({
         variant: "destructive",
-        title: "Error setting up profile",
-        description: "There was an error setting up your profile. Please try again.",
+        title: "Error configurando el perfil",
+        description: "Hubo un error configurando tu perfil. Por favor intenta de nuevo.",
       });
       
       await signOut();
