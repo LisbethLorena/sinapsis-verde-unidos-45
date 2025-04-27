@@ -1,16 +1,16 @@
+import { useEffect, useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Award, Calendar, Star, Users, LogOut } from "lucide-react";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import DashboardFeedEvent from "@/components/DashboardFeedEvent";
 import { users, challenges, activities, recognitions, feedActivities } from "@/lib/mock-data";
 import type { User, Challenge, Activity, Recognition, FeedActivity } from "@/lib/types";
-import { useEffect, useState } from "react";
-import { useAuth } from "@/contexts/AuthContext";
+import WelcomeSection from "@/components/dashboard/WelcomeSection";
+import AchievementsCard from "@/components/dashboard/AchievementsCard";
+import ChallengesCard from "@/components/dashboard/ChallengesCard";
+import SuggestedActivitiesCard from "@/components/dashboard/SuggestedActivitiesCard";
+import RecommendedUsersCard from "@/components/dashboard/RecommendedUsersCard";
 
 const Dashboard = () => {
-  // Using Ana Martinez's data (id: "1")
   const [user, setUser] = useState<User | null>(null);
   const [userChallenges, setUserChallenges] = useState<Challenge[]>([]);
   const [latestRecognition, setLatestRecognition] = useState<Recognition | null>(null);
@@ -18,6 +18,15 @@ const Dashboard = () => {
   const [recommendedUsers, setRecommendedUsers] = useState<User[]>([]);
   const [recentActivities, setRecentActivities] = useState<FeedActivity[]>([]);
   const { signOut } = useAuth();
+
+  const motivationalPhrases = [
+    "Cada pequeña acción cuenta para un futuro mejor",
+    "Juntos construimos un mundo más sostenible",
+    "Tu compromiso inspira al cambio",
+    "Ser parte del cambio comienza hoy"
+  ];
+
+  const randomPhrase = motivationalPhrases[Math.floor(Math.random() * motivationalPhrases.length)];
 
   useEffect(() => {
     // Simulate fetching user data (Ana Martinez)
@@ -64,15 +73,6 @@ const Dashboard = () => {
     }
   }, []);
 
-  const motivationalPhrases = [
-    "Cada pequeña acción cuenta para un futuro mejor",
-    "Juntos construimos un mundo más sostenible",
-    "Tu compromiso inspira al cambio",
-    "Ser parte del cambio comienza hoy"
-  ];
-
-  const randomPhrase = motivationalPhrases[Math.floor(Math.random() * motivationalPhrases.length)];
-
   const handleSignOut = async () => {
     await signOut();
   };
@@ -81,117 +81,17 @@ const Dashboard = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Welcome Section with Logout Button */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4 mb-4">
-            <Avatar className="w-16 h-16">
-              <AvatarImage src={user.avatar} alt={user.name} />
-              <AvatarFallback>{user.name.split(" ").map(n => n[0]).join("")}</AvatarFallback>
-            </Avatar>
-            <div>
-              <h1 className="text-2xl font-bold mb-1">¡Bienvenida, {user.name}!</h1>
-              <p className="text-gray-600 italic">{randomPhrase}</p>
-            </div>
-          </div>
-          <Button variant="outline" onClick={handleSignOut} className="flex items-center">
-            <LogOut className="mr-2 h-4 w-4" />
-            Cerrar sesión
-          </Button>
-        </div>
-      </div>
+      <WelcomeSection 
+        user={user}
+        onSignOut={handleSignOut}
+        motivationalPhrase={randomPhrase}
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Points and Recognition Card */}
-        <Card className="col-span-full md:col-span-2 lg:col-span-1 bg-gradient-to-br from-sinapsis-green-light to-white">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <Award className="w-8 h-8 text-sinapsis-green" />
-              <div>
-                <h3 className="text-lg font-semibold">Tus logros</h3>
-                <p className="text-2xl font-bold text-sinapsis-green">{user.points} puntos</p>
-              </div>
-            </div>
-            
-            {latestRecognition && (
-              <div>
-                <h4 className="text-sm font-medium mb-2">Último reconocimiento:</h4>
-                <div className="bg-white/80 rounded-lg p-4">
-                  <Badge className="mb-2">{latestRecognition.category}</Badge>
-                  <p className="font-medium">{latestRecognition.title}</p>
-                  <p className="text-sm text-gray-600">{latestRecognition.description}</p>
-                </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* My Challenges Card */}
-        <Card className="col-span-full md:col-span-2 lg:col-span-1">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-2 mb-4">
-              <Star className="w-5 h-5 text-sinapsis-blue" />
-              <h3 className="text-lg font-semibold">Mis retos</h3>
-            </div>
-            <div className="space-y-4">
-              {userChallenges.map(challenge => (
-                <div key={challenge.id} className="group hover:bg-gray-50 rounded-lg p-3 transition-colors">
-                  <h4 className="font-medium group-hover:text-sinapsis-green">{challenge.title}</h4>
-                  <div className="text-sm text-gray-600 space-y-1">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4" />
-                      <span>Inicio: {new Date(challenge.startDate).toLocaleDateString()}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Suggested Activities Card */}
-        <Card className="col-span-full md:col-span-2 lg:col-span-1 bg-gradient-to-br from-sinapsis-beige-light to-white">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-2 mb-4">
-              <Calendar className="w-5 h-5 text-sinapsis-green" />
-              <h3 className="text-lg font-semibold">Voluntariados sugeridos</h3>
-            </div>
-            <div className="space-y-4">
-              {suggestedActivities.map(activity => (
-                <div key={activity.id} className="bg-white/80 rounded-lg p-4">
-                  <h4 className="font-medium mb-1">{activity.title}</h4>
-                  <p className="text-sm text-gray-600 mb-2">{activity.category}</p>
-                  <Button variant="outline" size="sm">Me interesa</Button>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Recommended Users Card */}
-        <Card className="col-span-full md:col-span-2 lg:col-span-1">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-2 mb-4">
-              <Users className="w-5 h-5 text-sinapsis-blue" />
-              <h3 className="text-lg font-semibold">Perfiles recomendados</h3>
-            </div>
-            <div className="space-y-4">
-              {recommendedUsers.map(user => (
-                <div key={user.id} className="flex items-center gap-3">
-                  <Avatar>
-                    <AvatarImage src={user.avatar} alt={user.name} />
-                    <AvatarFallback>{user.name.split(" ").map(n => n[0]).join("")}</AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1">
-                    <h4 className="font-medium">{user.name}</h4>
-                    <p className="text-sm text-gray-600">{user.city}</p>
-                  </div>
-                  <Button variant="ghost" size="sm">Ver perfil</Button>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+        <AchievementsCard user={user} latestRecognition={latestRecognition} />
+        <ChallengesCard challenges={userChallenges} />
+        <SuggestedActivitiesCard activities={suggestedActivities} />
+        <RecommendedUsersCard users={recommendedUsers} />
 
         {/* Recent Activity Feed Card */}
         <Card className="col-span-full">
