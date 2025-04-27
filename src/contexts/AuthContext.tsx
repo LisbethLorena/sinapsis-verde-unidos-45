@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -133,7 +134,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signInWithGoogle = async () => {
     setLoading(true);
     try {
-      const { error, data: { session } } = await supabase.auth.signInWithOAuth({
+      // The function signInWithOAuth doesn't directly return a session
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/dashboard`
@@ -142,9 +144,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (error) throw error;
       
-      if (session) {
-        await handleSuccessfulAuth(session);
-      }
+      // The session will be handled by the onAuthStateChange listener
+      // No need to call handleSuccessfulAuth here as it will be triggered automatically
+      // after redirect back from OAuth provider
     } catch (error: any) {
       toast({
         variant: "destructive",
