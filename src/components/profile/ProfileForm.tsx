@@ -16,21 +16,30 @@ import { Textarea } from "@/components/ui/textarea";
 import { useProfile } from "@/hooks/useProfile";
 import { useAuth } from "@/contexts/AuthContext";
 
+// Update the schema to properly handle the string inputs for arrays
 const profileSchema = z.object({
   bio: z.string().max(500, "La biografía no puede exceder 500 caracteres"),
   city: z.string().min(2, "La ciudad debe tener al menos 2 caracteres").max(100),
+  // For these fields, we're handling them as strings in the form, but we'll transform them to arrays on submit
   interests: z.string().transform((str) => str.split(',').map((s) => s.trim())),
   skills: z.string().transform((str) => str.split(',').map((s) => s.trim())),
   attitudes: z.string().transform((str) => str.split(',').map((s) => s.trim())),
 });
 
-type ProfileFormValues = z.infer<typeof profileSchema>;
+// Define the form values type based on the input values (before transformation)
+type ProfileFormValues = {
+  bio: string;
+  city: string;
+  interests: string;
+  skills: string;
+  attitudes: string;
+};
 
 export function ProfileForm() {
   const { user } = useAuth();
   const { updateProfile, getProfile } = useProfile();
   
-  // Define the form with the correct type inference
+  // Define the form with correct types
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
     defaultValues: async () => {
@@ -48,7 +57,7 @@ export function ProfileForm() {
       const profile = await getProfile(user.id);
       if (!profile) return emptyValues;
       
-      // Return profile data with correctly formatted fields
+      // Format arrays as comma-separated strings for the form inputs
       return {
         bio: profile.bio || "",
         city: profile.city || "",
@@ -59,10 +68,12 @@ export function ProfileForm() {
     },
   });
 
-  async function onSubmit(data: ProfileFormValues) {
+  // On submit, the Zod transformation will convert the comma-separated strings back to arrays
+  async function onSubmit(data: z.infer<typeof profileSchema>) {
     if (!user) return;
     await updateProfile(user.id, {
       ...data,
+      // The filter will remove any empty strings from the arrays
       interests: data.interests.filter(Boolean),
       skills: data.skills.filter(Boolean),
       attitudes: data.attitudes.filter(Boolean),
