@@ -29,9 +29,12 @@ type ProfileFormValues = z.infer<typeof profileSchema>;
 export function ProfileForm() {
   const { user } = useAuth();
   const { updateProfile, getProfile } = useProfile();
+  
+  // Define the form with the correct type inference
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
     defaultValues: async () => {
+      // Create a correctly typed empty values object
       const emptyValues: ProfileFormValues = {
         bio: "",
         city: "",
@@ -45,6 +48,7 @@ export function ProfileForm() {
       const profile = await getProfile(user.id);
       if (!profile) return emptyValues;
       
+      // Return profile data with correctly formatted fields
       return {
         bio: profile.bio || "",
         city: profile.city || "",
