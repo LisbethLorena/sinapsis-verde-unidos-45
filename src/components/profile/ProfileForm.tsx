@@ -68,16 +68,20 @@ export function ProfileForm() {
     },
   });
 
-  // On submit, the Zod transformation will convert the comma-separated strings back to arrays
-  async function onSubmit(data: z.infer<typeof profileSchema>) {
+  // On submit, use the ProfileFormValues type and handle the transformation
+  async function onSubmit(formData: ProfileFormValues) {
     if (!user) return;
-    await updateProfile(user.id, {
-      ...data,
-      // The filter will remove any empty strings from the arrays
-      interests: data.interests.filter(Boolean),
-      skills: data.skills.filter(Boolean),
-      attitudes: data.attitudes.filter(Boolean),
-    });
+    
+    // Transform the comma-separated strings to arrays
+    const transformedData = {
+      bio: formData.bio,
+      city: formData.city,
+      interests: formData.interests.split(',').map(s => s.trim()).filter(Boolean),
+      skills: formData.skills.split(',').map(s => s.trim()).filter(Boolean),
+      attitudes: formData.attitudes.split(',').map(s => s.trim()).filter(Boolean),
+    };
+    
+    await updateProfile(user.id, transformedData);
   }
 
   return (
