@@ -32,7 +32,14 @@ export function ProfileForm() {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
     defaultValues: async () => {
-      if (!user) return {};
+      if (!user) return {
+        bio: "",
+        city: "",
+        interests: "",
+        skills: "",
+        attitudes: ""
+      };
+      
       const profile = await getProfile(user.id);
       return {
         bio: profile?.bio || "",
