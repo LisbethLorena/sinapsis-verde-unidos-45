@@ -32,7 +32,7 @@ export function ProfileForm() {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
     defaultValues: async () => {
-      if (!user) return {
+      const emptyValues: ProfileFormValues = {
         bio: "",
         city: "",
         interests: "",
@@ -40,13 +40,17 @@ export function ProfileForm() {
         attitudes: ""
       };
       
+      if (!user) return emptyValues;
+      
       const profile = await getProfile(user.id);
+      if (!profile) return emptyValues;
+      
       return {
-        bio: profile?.bio || "",
-        city: profile?.city || "",
-        interests: profile?.interests?.join(", ") || "",
-        skills: profile?.skills?.join(", ") || "",
-        attitudes: profile?.attitudes?.join(", ") || "",
+        bio: profile.bio || "",
+        city: profile.city || "",
+        interests: Array.isArray(profile.interests) ? profile.interests.join(", ") : "",
+        skills: Array.isArray(profile.skills) ? profile.skills.join(", ") : "",
+        attitudes: Array.isArray(profile.attitudes) ? profile.attitudes.join(", ") : "",
       };
     },
   });
