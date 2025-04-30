@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useProfile } from "@/hooks/useProfile";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/auth";
 
 // Update the schema to properly handle the string inputs for arrays
 const profileSchema = z.object({
