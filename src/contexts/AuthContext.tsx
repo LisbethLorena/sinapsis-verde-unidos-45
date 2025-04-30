@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -27,22 +26,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-        
-        if (session?.user) {
-          const profileCreated = await ensureUserProfile(session.user);
-          if (!profileCreated && event !== 'SIGNED_OUT') {
-            toast({
-              variant: "destructive",
-              title: "Error al configurar el perfil",
-              description: "Hubo un error configurando tu perfil. Por favor intenta de nuevo.",
-            });
-            await signOut();
-          }
-        }
-        
         setLoading(false);
       }
     );
@@ -104,8 +90,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error: any) {
       toast({
         variant: "destructive",
-        title: "Error configurando el perfil",
-        description: "Hubo un error configurando tu perfil. Por favor intenta de nuevo.",
+        title: "Error setting up profile",
+        description: "There was an error setting up your profile. Please try again.",
       });
       
       await signOut();
@@ -147,8 +133,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signInWithGoogle = async () => {
     setLoading(true);
     try {
-      // The function signInWithOAuth doesn't directly return a session
-      const { error } = await supabase.auth.signInWithOAuth({
+      const { error, data: { session } } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/dashboard`
@@ -157,9 +142,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (error) throw error;
       
-      // The session will be handled by the onAuthStateChange listener
-      // No need to call handleSuccessfulAuth here as it will be triggered automatically
-      // after redirect back from OAuth provider
+      if (session) {
+        await handleSuccessfulAuth(session);
+      }
     } catch (error: any) {
       toast({
         variant: "destructive",
