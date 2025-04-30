@@ -18,7 +18,7 @@ import Register from "./pages/Register";
 import CompanyRegister from "./pages/CompanyRegister";
 import Feed from "./pages/Feed";
 import Dashboard from "./pages/Dashboard";
-import { AuthProvider } from "./contexts/AuthContext";
+import { AuthProvider } from "./contexts/auth";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();

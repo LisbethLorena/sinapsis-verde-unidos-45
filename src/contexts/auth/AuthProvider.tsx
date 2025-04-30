@@ -1,22 +1,11 @@
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/components/ui/use-toast';
 import { useProfile } from '@/hooks/useProfile';
-
-type AuthContextType = {
-  session: Session | null;
-  user: User | null;
-  loading: boolean;
-  signUp: (email: string, password: string) => Promise<void>;
-  signIn: (email: string, password: string) => Promise<void>;
-  signInWithGoogle: () => Promise<void>;
-  signOut: () => Promise<void>;
-};
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+import AuthContext from './AuthContext';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
@@ -147,7 +136,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signInWithGoogle = async () => {
     setLoading(true);
     try {
-      // The function signInWithOAuth doesn't directly return a session
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -156,10 +144,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
 
       if (error) throw error;
-      
-      // The session will be handled by the onAuthStateChange listener
-      // No need to call handleSuccessfulAuth here as it will be triggered automatically
-      // after redirect back from OAuth provider
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -213,12 +197,4 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
 }
