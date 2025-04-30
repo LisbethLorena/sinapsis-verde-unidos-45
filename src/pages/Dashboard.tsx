@@ -1,32 +1,23 @@
-
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/auth";
+import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent } from "@/components/ui/card";
 import DashboardFeedEvent from "@/components/DashboardFeedEvent";
-import { challenges, activities, recognitions, feedActivities } from "@/lib/mock-data";
-import type { Challenge, Activity, Recognition, FeedActivity } from "@/lib/types";
+import { users, challenges, activities, recognitions, feedActivities } from "@/lib/mock-data";
+import type { User, Challenge, Activity, Recognition, FeedActivity } from "@/lib/types";
 import WelcomeSection from "@/components/dashboard/WelcomeSection";
 import AchievementsCard from "@/components/dashboard/AchievementsCard";
 import ChallengesCard from "@/components/dashboard/ChallengesCard";
 import SuggestedActivitiesCard from "@/components/dashboard/SuggestedActivitiesCard";
 import RecommendedUsersCard from "@/components/dashboard/RecommendedUsersCard";
-import { useProfile, UserProfile } from "@/hooks/useProfile";
-import { Loader2 } from "lucide-react";
-import { toast } from "@/components/ui/use-toast";
 
 const Dashboard = () => {
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
   const [userChallenges, setUserChallenges] = useState<Challenge[]>([]);
   const [latestRecognition, setLatestRecognition] = useState<Recognition | null>(null);
   const [suggestedActivities, setSuggestedActivities] = useState<Activity[]>([]);
-  const [recommendedUsers, setRecommendedUsers] = useState<any[]>([]);
+  const [recommendedUsers, setRecommendedUsers] = useState<User[]>([]);
   const [recentActivities, setRecentActivities] = useState<FeedActivity[]>([]);
-  
-  const { user, signOut } = useAuth();
-  const { getProfile } = useProfile();
-  const navigate = useNavigate();
+  const { signOut } = useAuth();
 
   const motivationalPhrases = [
     "Cada pequeña acción cuenta para un futuro mejor",
@@ -37,99 +28,67 @@ const Dashboard = () => {
 
   const randomPhrase = motivationalPhrases[Math.floor(Math.random() * motivationalPhrases.length)];
 
-  // Fetch user profile and related data
   useEffect(() => {
-    const loadUserData = async () => {
-      if (!user) {
-        navigate('/');
-        return;
-      }
+    // Simulate fetching user data (Ana Martinez)
+    const currentUser = users.find(u => u.id === "1");
+    setUser(currentUser || null);
 
-      setLoading(true);
-      try {
-        // Get user profile from Supabase
-        const profile = await getProfile(user.id);
-        if (!profile) {
-          toast({
-            variant: "destructive",
-            title: "Error",
-            description: "No se pudo cargar tu perfil. Por favor intenta de nuevo.",
-          });
-          return;
-        }
-        setUserProfile(profile);
+    if (currentUser) {
+      // Get user challenges
+      const userChallenges = challenges.filter(c => 
+        currentUser.participatingChallenges.includes(c.id)
+      ).slice(0, 3);
+      setUserChallenges(userChallenges);
 
-        // Load other related data from mock data (for now)
-        // In a real application, we would fetch this data from Supabase as well
-        
-        // Get user challenges (using mock data for now)
-        const userChallenges = challenges.slice(0, 3);
-        setUserChallenges(userChallenges);
+      // Get latest recognition
+      const userRecognitions = recognitions.filter(r => r.user === currentUser.id);
+      setLatestRecognition(userRecognitions[0] || null);
 
-        // Get latest recognition (using mock data for now)
-        const userRecognitions = recognitions.filter(r => r.user === "1");
-        setLatestRecognition(userRecognitions[0] || null);
+      // Get suggested activities based on user interests
+      const suggestedActivities = activities
+        .filter(activity => 
+          currentUser.interests.some(interest => 
+            activity.title.toLowerCase().includes(interest.toLowerCase())
+          )
+        )
+        .slice(0, 2);
+      setSuggestedActivities(suggestedActivities);
 
-        // Get suggested activities based on user interests (using mock data for now)
-        const suggestedActivities = activities.slice(0, 2);
-        setSuggestedActivities(suggestedActivities);
+      // Get recommended users based on shared interests
+      const recommendedUsers = users
+        .filter(u => 
+          u.id !== currentUser.id &&
+          u.interests.some(interest => 
+            currentUser.interests.includes(interest)
+          )
+        )
+        .slice(0, 3);
+      setRecommendedUsers(recommendedUsers);
 
-        // Get recommended users (using mock data for now)
-        const recommendedUsers = [];
-        setRecommendedUsers(recommendedUsers);
-
-        // Get recent activities (using mock data for now)
-        const recentActivities = feedActivities.slice(0, 5);
-        setRecentActivities(recentActivities);
-      } catch (error) {
-        console.error("Error loading user data:", error);
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Hubo un problema cargando tus datos. Por favor intenta de nuevo.",
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadUserData();
-  }, [user, navigate, getProfile]);
+      // Get recent activities
+      const recentActivities = feedActivities
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .slice(0, 5);
+      setRecentActivities(recentActivities);
+    }
+  }, []);
 
   const handleSignOut = async () => {
-    try {
-      await signOut();
-      navigate('/');
-    } catch (error) {
-      console.error("Error signing out:", error);
-      toast({
-        variant: "destructive",
-        title: "Error al cerrar sesión",
-        description: "Hubo un problema al cerrar tu sesión. Por favor intenta de nuevo.",
-      });
-    }
+    await signOut();
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-sinapsis-green" />
-      </div>
-    );
-  }
-
-  if (!userProfile) return null;
+  if (!user) return null;
 
   return (
     <div className="container mx-auto px-4 py-8">
       <WelcomeSection 
-        user={userProfile}
+        user={user}
         onSignOut={handleSignOut}
         motivationalPhrase={randomPhrase}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <AchievementsCard user={userProfile} latestRecognition={latestRecognition} />
+        <AchievementsCard user={user} latestRecognition={latestRecognition} />
         <ChallengesCard challenges={userChallenges} />
         <SuggestedActivitiesCard activities={suggestedActivities} />
         <RecommendedUsersCard users={recommendedUsers} />
