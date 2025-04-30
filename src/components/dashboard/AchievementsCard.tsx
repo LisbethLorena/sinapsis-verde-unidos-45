@@ -2,10 +2,11 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Award } from "lucide-react";
-import { Recognition, User } from "@/lib/types";
+import { Recognition } from "@/lib/types";
+import { UserProfile } from "@/hooks/useProfile";
 
 interface AchievementsCardProps {
-  user: User | null;
+  user: UserProfile | null;
   latestRecognition: Recognition | null;
 }
 
@@ -19,7 +20,7 @@ const AchievementsCard = ({ user, latestRecognition }: AchievementsCardProps) =>
           <Award className="w-8 h-8 text-sinapsis-green" />
           <div>
             <h3 className="text-lg font-semibold">Tus logros</h3>
-            <p className="text-2xl font-bold text-sinapsis-green">{user.points} puntos</p>
+            <p className="text-2xl font-bold text-sinapsis-green">{user.points || 0} puntos</p>
           </div>
         </div>
         
@@ -31,6 +32,12 @@ const AchievementsCard = ({ user, latestRecognition }: AchievementsCardProps) =>
               <p className="font-medium">{latestRecognition.title}</p>
               <p className="text-sm text-gray-600">{latestRecognition.description}</p>
             </div>
+          </div>
+        )}
+
+        {!latestRecognition && (
+          <div>
+            <p className="text-sm text-gray-600">Aún no tienes reconocimientos. ¡Participa en retos para ganar reconocimientos!</p>
           </div>
         )}
       </CardContent>

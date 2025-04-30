@@ -2,10 +2,10 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
-import { User } from "@/lib/types";
+import { UserProfile } from "@/hooks/useProfile";
 
 interface WelcomeSectionProps {
-  user: User | null;
+  user: UserProfile | null;
   onSignOut: () => Promise<void>;
   motivationalPhrase: string;
 }
@@ -18,11 +18,11 @@ const WelcomeSection = ({ user, onSignOut, motivationalPhrase }: WelcomeSectionP
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4 mb-4">
           <Avatar className="w-16 h-16">
-            <AvatarImage src={user.avatar} alt={user.name} />
+            <AvatarImage src={user.avatar || undefined} alt={user.name} />
             <AvatarFallback>{user.name.split(" ").map(n => n[0]).join("")}</AvatarFallback>
           </Avatar>
           <div>
-            <h1 className="text-2xl font-bold mb-1">¡Bienvenida, {user.name}!</h1>
+            <h1 className="text-2xl font-bold mb-1">¡Bienvenid@, {user.name}!</h1>
             <p className="text-gray-600 italic">{motivationalPhrase}</p>
           </div>
         </div>

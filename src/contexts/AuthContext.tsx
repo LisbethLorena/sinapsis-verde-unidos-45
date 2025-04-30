@@ -178,7 +178,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
       
-      navigate('/login');
+      // Clear session and user state
+      setSession(null);
+      setUser(null);
+      
+      // Redirect to home page
+      navigate('/');
+      
+      toast({
+        title: "Sesión cerrada",
+        description: "Has cerrado sesión correctamente.",
+      });
     } catch (error: any) {
       toast({
         variant: "destructive",
